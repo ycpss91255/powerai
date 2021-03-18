@@ -1,0 +1,20 @@
+pip==21.0.1
+setuptools==54.1.2
+wheel==0.36.2
+numpy==1.17.4
+llvmlite
+tqdm==4.36.1
+pybind11
+PyYAML==5.4.1
+Pillow==7.1.2
+numba==0.48
+scipy==1.2.3
+scikit-learn==0.21.1
+librosa==0.6.3
+mir_eval
+matplotlib
+tensorboardX
+ffmpeg-normalize
+SoundFile
+# torch==1.3.1
+# torchvision==0.4.0
