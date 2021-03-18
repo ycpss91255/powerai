@@ -4,7 +4,7 @@ file_dir=`dirname $0`
 
 # get parameter from system
 
-# export DOCKER_BUILDKIT=1
+export DOCKER_BUILDKIT=1
 
 DOCKER_IMAGE_NAME=liu_voicefilter
 

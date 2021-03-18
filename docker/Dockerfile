@@ -7,12 +7,12 @@ ARG GROUP=pwrai
 ARG UID=2051
 ARG GID=2051
 ARG SHELL=/bin/bash
-ARG HOME=/home/pwrai
+
 USER root
 
 # Setup users and groups
 RUN mkdir -p /etc/sudoers.d \
-  && echo "${USER}:x:${UID}:${UID}:${USER},,,:$HOME:${shell}" >> /etc/passwd \
+  && echo "${USER}:x:${UID}:${UID}:${USER},,,:/home/pwrai:${shell}" >> /etc/passwd \
   && echo "${USER}:x:${UID}:" >> /etc/group \
   && echo "${USER} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${USER}" \
   && chmod 0440 "/etc/sudoers.d/${USER}"
@@ -26,12 +26,18 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     wget curl git tree \
     vim byobu nano htop \
-    llvm-10-dev libjpeg-dev \
-    libssl-dev libblas-dev \
-    liblapack-dev gfortran \
-    libffi-dev libxml2-dev \
-    libxslt1-dev zlib1g-dev \
-    libpng-dev pkg-config \
+    llvm-7-dev \
+    libjpeg-dev \
+    libssl-dev \
+    libblas-dev \
+    liblapack-dev \
+    gfortran \
+    libffi-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    libpng-dev \
+    pkg-config \
     python3-pip \
     python3-wheel \
     python3.7-dev \
@@ -43,14 +49,16 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+ENV LLVM_CONFIG=/usr/bin/llvm-config-7
+
 USER ${USER}
 
 # setup custom configuration
-COPY config ${HOME}/.tmp
-RUN  sh -c "cat ${HOME}/.tmp/bashrc/* >> ${HOME}/.bashrc" \
+COPY config /home/${USER}/.tmp
+RUN  sh -c "cat /home/${USER}/.tmp/bashrc/* >> /home/${USER}/.bashrc" \
   && python3.7 -m pip install -U pip Cython \
-  && python3.7 -m pip install -r ${HOME}/.tmp/pip/requirements.txt
-RUN sudo rm -rf ${HOME}/.tmp
+  && python3.7 -m pip install -r /home/${USER}/.tmp/pip/requirements.txt \
+  && sudo rm -rf /home/${USER}/.tmp
 
 # Switch user to pwrai
 RUN sudo mkdir work
@@ -59,7 +67,7 @@ RUN sudo mkdir work
 EXPOSE 22
 
 # Switch to user's HOME folder
-WORKDIR ${HOME}/work
+WORKDIR /home/${USER}/work
 
 # ENTRYPOINT ["terminator"]
 ENTRYPOINT ["byobu"]
